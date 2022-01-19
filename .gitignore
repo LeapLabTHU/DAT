@@ -102,4 +102,4 @@ ENV/
 
 # other
 .vscode
-data/
+# data/
