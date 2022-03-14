@@ -44,6 +44,6 @@ If you find our work is useful in your research, please consider citing:
 }
 ```
 
-### Contact
+## Contact
 
 [xzf20@mails.tsinghua.edu.cn](xzf20@mails.tsinghua.edu.cn)
