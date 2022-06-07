@@ -1,6 +1,6 @@
 # Vision Transformer with Deformable Attention
 
-This repository contains the code for the paper Vision Transformer with Deformable Attention (CVPR2022) \[[arXiv](https://arxiv.org/abs/2201.00520)\]. 
+This repository contains the code for the paper Vision Transformer with Deformable Attention (CVPR2022) \[[arXiv](https://arxiv.org/abs/2201.00520)\]\[[video](https://cloud.tsinghua.edu.cn/f/17476d769ced48eaa278/)]\[[poster](https://cloud.tsinghua.edu.cn/f/9afe817efb504d32951b/)\]. 
 
 ## Introduction
 
@@ -132,4 +132,4 @@ If you find our work is useful in your research, please consider citing:
 
 ## Contact
 
-[xzf20@mails.tsinghua.edu.cn](xzf20@mails.tsinghua.edu.cn)
+If you have any questions and concerns, please send mail to [xzf20@mails.tsinghua.edu.cn](mailto:xzf20@mails.tsinghua.edu.cn).
