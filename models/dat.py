@@ -21,8 +21,8 @@ class TransformerStage(nn.Module):
 
     def __init__(self, fmap_size, window_size, ns_per_pt,
                  dim_in, dim_embed, depths, stage_spec, n_groups, 
-                 use_pe, sr_ratio,
-                 heads, stride, offset_range_factor, 
+                 use_pe, sr_ratio, 
+                 heads, stride, offset_range_factor, stage_idx,
                  dwc_pe, no_off, fixed_pe,
                  attn_drop, proj_drop, expansion, drop, drop_path_rate, use_dwc_mlp):
 
@@ -55,7 +55,7 @@ class TransformerStage(nn.Module):
                     DAttentionBaseline(fmap_size, fmap_size, heads, 
                     hc, n_groups, attn_drop, proj_drop, 
                     stride, offset_range_factor, use_pe, dwc_pe, 
-                    no_off, fixed_pe)
+                    no_off, fixed_pe, stage_idx)
                 )
             elif stage_spec[i] == 'S':
                 shift_size = math.ceil(window_size / 2)
@@ -126,7 +126,7 @@ class DAT(nn.Module):
                 TransformerStage(img_size, window_sizes[i], ns_per_pts[i],
                 dim1, dim2, depths[i], stage_spec[i], groups[i], use_pes[i], 
                 sr_ratios[i], heads[i], strides[i], 
-                offset_range_factor[i], 
+                offset_range_factor[i], i,
                 dwc_pes[i], no_offs[i], fixed_pes[i],
                 attn_drop_rate, drop_rate, expansion, drop_rate, 
                 dpr[sum(depths[:i]):sum(depths[:i + 1])],

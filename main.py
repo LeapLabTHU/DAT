@@ -157,10 +157,12 @@ def main():
         data_loader_train.sampler.set_epoch(epoch)
 
         train_one_epoch(config, model, criterion, data_loader_train, optimizer, epoch, mixup_fn, lr_scheduler, logger)
+        torch.cuda.empty_cache()
         if dist.get_rank() == 0 and ((epoch + 1) % config.SAVE_FREQ == 0 or (epoch + 1) == (config.TRAIN.EPOCHS)):
             save_checkpoint(config, epoch + 1, model_without_ddp, max_accuracy, optimizer, lr_scheduler, logger)
 
         acc1, acc5, loss = validate(config, data_loader_val, model, logger)
+        torch.cuda.empty_cache()
         logger.info(f"Accuracy of the network on the {len(dataset_val)} test images: {acc1:.1f}%")
         max_accuracy = max(max_accuracy, acc1)
         logger.info(f'Max accuracy: {max_accuracy:.2f}%')
@@ -184,7 +186,6 @@ def train_one_epoch(config, model, criterion, data_loader, optimizer, epoch, mix
 
     scaler = GradScaler()
     
-
     for idx, (samples, targets) in enumerate(data_loader):
         
         optimizer.zero_grad()
@@ -288,5 +289,4 @@ def validate(config, data_loader, model, logger):
     return acc1_meter.avg, acc5_meter.avg, loss_meter.avg
 
 if __name__ == '__main__':
-    # mp.spawn(main, args=(), nprocs=torch.cuda.device_count())
     main()

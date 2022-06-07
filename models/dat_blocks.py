@@ -131,7 +131,7 @@ class DAttentionBaseline(nn.Module):
         self, q_size, kv_size, n_heads, n_head_channels, n_groups,
         attn_drop, proj_drop, stride, 
         offset_range_factor, use_pe, dwc_pe,
-        no_off, fixed_pe
+        no_off, fixed_pe, stage_idx
     ):
 
         super().__init__()
@@ -150,14 +150,8 @@ class DAttentionBaseline(nn.Module):
         self.no_off = no_off
         self.offset_range_factor = offset_range_factor
         
-        if self.q_h == 14 or self.q_w == 14 or self.q_h == 24 or self.q_w == 24:
-            kk = 5
-        elif self.q_h == 7 or self.q_w == 7 or self.q_h == 12 or self.q_w == 12:
-            kk = 3
-        elif self.q_h == 28 or self.q_w == 28 or self.q_h == 48 or self.q_w == 48:
-            kk = 7
-        elif self.q_h == 56 or self.q_w == 56 or self.q_h == 96 or self.q_w == 96:
-            kk = 9
+        ksizes = [9, 7, 5, 3]
+        kk = ksizes[stage_idx]
 
         self.conv_offset = nn.Sequential(
             nn.Conv2d(self.n_group_channels, self.n_group_channels, kk, stride, kk//2, groups=self.n_group_channels),

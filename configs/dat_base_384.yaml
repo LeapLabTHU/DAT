@@ -1,0 +1,41 @@
+MODEL:
+  TYPE: dat
+  NAME: dat_base_384
+  DAT:
+    img_size: 384
+    patch_size: 4
+    num_classes: 1000
+    expansion: 4
+    dim_stem: 128
+    dims: [128, 256, 512, 1024]
+    depths: [2, 2, 18, 2]
+    stage_spec: [[L, S], [L, S], [L, D, L, D, L, D, L, D, L, D, L, D, L, D, L, D, L, D], [L, D]]
+    heads: [4, 8, 16, 32]
+    window_sizes: [12, 12, 12, 12] 
+    groups: [-1, -1, 4, 8]
+    use_pes: [False, False, True, True]
+    dwc_pes: [False, False, False, False]
+    strides: [-1, -1, 1, 1]
+    sr_ratios: [-1, -1, -1, -1]
+    offset_range_factor: [-1, -1, 2, 2]
+    no_offs: [False, False, False, False]
+    fixed_pes: [False, False, False, False]
+    use_dwc_mlps: [False, False, False, False]
+    use_conv_patches: False
+    drop_rate: 0.0
+    attn_drop_rate: 0.0
+    drop_path_rate: 0.5
+    
+
+TRAIN:
+  EPOCHS: 30
+  WARMUP_EPOCHS: 0
+  BASE_LR: 2e-6
+  WEIGHT_DECAY: 1e-8
+  MIN_LR: 1e-7
+  
+DATA:
+  BATCH_SIZE: 24
+  IMG_SIZE: 384
+
+SAVE_FREQ: 1
