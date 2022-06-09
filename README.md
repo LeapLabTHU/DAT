@@ -8,13 +8,14 @@ This repository contains the code for the paper Vision Transformer with Deformab
 
 ![Motivation](figures/motivation.png)
 
-**(a) Vision Transformer(ViT)** has proved its superiority over many tasks thanks to its large or even global receptive field. However, this global attetnion leads to excessive computational cost. **(b) Swin Transformer** proposes shifted window attention, which is a more efficient sparse attention mechanism with linear computation complexity. Nevertheless, this hand crafted attention pattern is likely to drop important features outside one window, and shifting windows impedes the growth of the receptive field, limiting to model long range dependencies. **(c) DCN** expands the receptive fields of the standard convolutions with the learned offsets for each different query. Howbeit, directly applying this technique to the Vision Transformer is non-trivial for the quadratic space complexity and the training difficulties. **(d) Deformable Attention (DAT)** is proposed to model the relations among tokens effectively under the guidance of the important regions in the feature maps. This flexible scheme enables the self-attention module to focus on relevant regions and capture more informative features.
+**(a) Vision Transformer(ViT)** has proved its superiority over many tasks thanks to its large or even global receptive field. However, this global attention leads to excessive computational costs. **(b) Swin Transformer** proposes shifted window attention, which is a more efficient sparse attention mechanism with linear computation complexity. Nevertheless, this hand-crafted attention pattern is likely to drop important features outside one window, and shifting windows impedes the growth of the receptive field, limiting modeling the long-range dependencies. **(c) DCN** expands the receptive fields of the standard convolutions with the learned offsets for each different query. Howbeit, directly applying this technique to the Vision Transformer is non-trivial for the quadratic space complexity and the training difficulties. **(d) Deformable Attention (DAT)** is proposed to model the relations among tokens effectively under the guidance of the important regions in the feature maps. This flexible scheme enables the self-attention module to focus on relevant regions and capture more informative features.
+
 
 ### Method
 
 ![Deform_Attn](figures/datt.png)
 
-By learning a number of groups of offsets for the grid refrence points, the deformed keys and values are sampled from these shifted locations. This deformable attention can capture the most informative regions in the image. On this basis, we present **Deformable Attention Transformer (DAT)**, a general backbone model with deformable attention for both image classification and other dense prediction tasks. 
+By learning several groups of offsets for the grid reference points, the deformed keys and values are sampled from these shifted locations. This deformable attention can capture the most informative regions in the image. On this basis, we present **Deformable Attention Transformer (DAT)**, a general backbone model with deformable attention for both image classification and other dense prediction tasks. 
 
 ### Visualizations
 
@@ -38,7 +39,7 @@ Visualizations show the most important keys denotes in orange circles, where lar
 
 ## Evaluate Pretrained Models
 
-We provide the pretrained models in the tiny, small and base verisions of DAT, as listed below.
+We provide the pretrained models in the tiny, small, and base versions of DAT, as listed below.
 
 | model  | resolution | acc@1 | config | pretrained weights |
 | :---: | :---: | :---: | :---: | :---: |
@@ -119,17 +120,8 @@ If you find our work is useful in your research, please consider citing:
     month     = {June},
     year      = {2022}
 }
-
-@misc{xia2022vision,
-      title={Vision Transformer with Deformable Attention}, 
-      author={Zhuofan Xia and Xuran Pan and Shiji Song and Li Erran Li and Gao Huang},
-      year={2022},
-      eprint={2201.00520},
-      archivePrefix={arXiv},
-      primaryClass={cs.CV}
-}
 ```
 
 ## Contact
 
-If you have any questions and concerns, please send mail to [xzf20@mails.tsinghua.edu.cn](mailto:xzf20@mails.tsinghua.edu.cn).
+If you have any questions or concerns, please send mail to [xzf20@mails.tsinghua.edu.cn](mailto:xzf20@mails.tsinghua.edu.cn).

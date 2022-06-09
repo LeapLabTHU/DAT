@@ -67,9 +67,6 @@ _C.TRAIN.MIN_LR = 5e-6
 _C.TRAIN.CLIP_GRAD = 5.0
 # Auto resume from latest checkpoint
 _C.TRAIN.AUTO_RESUME = True
-# Whether to use gradient checkpointing to save memory
-# could be overwritten by command line argument
-_C.TRAIN.USE_CHECKPOINT = False
 
 # LR scheduler
 _C.TRAIN.LR_SCHEDULER = CN()
@@ -168,14 +165,10 @@ def update_config(config, args):
         config.merge_from_list(args.opts)
 
     # merge from specific arguments
-    if args.batch_size:
-        config.DATA.BATCH_SIZE = args.batch_size
     if args.data_path:
         config.DATA.DATA_PATH = args.data_path
     if args.resume:
         config.MODEL.RESUME = args.resume
-    if args.use_checkpoint:
-        config.TRAIN.USE_CHECKPOINT = True
     if args.amp:
         config.AMP = args.amp
     if args.output:
