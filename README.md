@@ -113,12 +113,13 @@ High-Flyer AI Fundamental Research Co.,Ltd](https://www.high-flyer.cn/).
 If you find our work is useful in your research, please consider citing:
 
 ```
-@InProceedings{xia2022dat,
+@InProceedings{Xia_2022_CVPR,
     author    = {Xia, Zhuofan and Pan, Xuran and Song, Shiji and Li, Li Erran and Huang, Gao},
-    title     = {Vision Transformer with Deformable Attention},
+    title     = {Vision Transformer With Deformable Attention},
     booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
     month     = {June},
-    year      = {2022}
+    year      = {2022},
+    pages     = {4794-4803}
 }
 ```
 
