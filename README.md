@@ -43,10 +43,10 @@ We provide the pretrained models in the tiny, small, and base versions of DAT++,
 
 | model  | resolution | acc@1 | config | pretrained weights |
 | :---: | :---: | :---: | :---: | :---: |
-| DAT-T++ | 224x224 | 83.9 | [config](configs/dat_tiny.yaml) | [GoogleDrive](https://drive.google.com/file/d/1I08oJlXNtDe8jJPxHkroxUi7lYX2lhVc/view?usp=sharing) / [TsinghuaCloud](https://cloud.tsinghua.edu.cn/f/1367349deefc48efa650/) |
-| DAT-S++ | 224x224 | 84.6 | [config](configs/dat_small.yaml) | [GoogleDrive](https://drive.google.com/file/d/1UUmQqQYY5OInVuXvUgO41Gice93vJ0A7/view?usp=sharing) / [TsinghuaCloud](https://cloud.tsinghua.edu.cn/f/f04b18081e3e4606adb7/) |
-| DAT-B++ | 224x224 | 84.9 | [config](configs/dat_base.yaml) | [GoogleDrive](https://drive.google.com/file/d/1Avu16r59koxizoSYhfaCdNdr-QxLVGjd/view?usp=sharing) / [TsinghuaCloud](https://cloud.tsinghua.edu.cn/f/a8d2a9645d454120b635/) |
-| DAT-B++ | 384x384 | 85.9 | [config](configs/dat_base_384.yaml) | [GoogleDrive](https://drive.google.com/file/d/1m8E2U4iQ6EOe1e8SuAGPbPlPhISXnVWq/view?usp=sharing) / [TsinghuaCloud](https://cloud.tsinghua.edu.cn/f/cf6a6b543cd64e0d8e43/) |
+| DAT-T++ | 224x224 | 83.9 | [config](configs/dat_tiny.yaml) | [OneDrive](https://1drv.ms/u/s!ApI0vb6wPqmtgrl-pI8MPFoll-ueNQ?e=bpdieu) / [TsinghuaCloud](https://cloud.tsinghua.edu.cn/f/14c5ddae10b642e68089/) |
+| DAT-S++ | 224x224 | 84.6 | [config](configs/dat_small.yaml) | [OneDrive](https://1drv.ms/u/s!ApI0vb6wPqmtgroB0ESeknbTsksWAg?e=Jbh0BS) / [TsinghuaCloud](https://cloud.tsinghua.edu.cn/f/4c2a76360c964fbd81d5/) |
+| DAT-B++ | 224x224 | 84.9 | [config](configs/dat_base.yaml) | [OneDrive](https://1drv.ms/u/s!ApI0vb6wPqmtgrl_P46QOehhgA0-wg?e=DJRAfw) / [TsinghuaCloud](https://cloud.tsinghua.edu.cn/f/8e30492404d348d89f25/) |
+| DAT-B++ | 384x384 | 85.9 | [config](configs/dat_base_384.yaml) | [OneDrive](https://1drv.ms/u/s!ApI0vb6wPqmtgroAI7cLAoj17khZNw?e=7yzxAg) / [TsinghuaCloud](https://cloud.tsinghua.edu.cn/f/032dc804cdf44bf18bb5/) |
 
 To evaluate one model, please download the pretrained weights to your local machine and run the script `evaluate.sh` as follow. 
 
