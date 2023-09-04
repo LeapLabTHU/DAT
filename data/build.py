@@ -16,20 +16,18 @@ from torchvision import datasets, transforms
 from timm.data.constants import IMAGENET_DEFAULT_MEAN, IMAGENET_DEFAULT_STD
 from timm.data import Mixup
 from timm.data import create_transform
-from timm.data.transforms import _str_to_pil_interpolation
-
 from .samplers import SubsetRandomSampler
 from torch.utils.data import DataLoader
-    
 def build_loader(config):
+
     config.defrost()
     dataset_train, config.MODEL.NUM_CLASSES = build_dataset(is_train=True, config=config)
     config.freeze()
-    print(f"local rank {config.LOCAL_RANK} / global rank {dist.get_rank()} successfully build train dataset")
+
     dataset_val, _ = build_dataset(is_train=False, config=config)
-    print(f"local rank {config.LOCAL_RANK} / global rank {dist.get_rank()} successfully build val dataset")
+
     num_tasks = dist.get_world_size()
-    global_rank = dist.get_rank()  
+    global_rank = dist.get_rank()
     sampler_train = torch.utils.data.DistributedSampler(
         dataset_train, num_replicas=num_tasks, rank=global_rank, shuffle=True
     )
@@ -41,7 +39,7 @@ def build_loader(config):
         batch_size=config.DATA.BATCH_SIZE,
         num_workers=config.DATA.NUM_WORKERS,
         pin_memory=config.DATA.PIN_MEMORY,
-        drop_last=True,
+        drop_last=True
     )
 
     data_loader_val = DataLoader(
@@ -81,7 +79,7 @@ def build_dataset(is_train, config):
 def build_transform(is_train, config):
     resize_im = config.DATA.IMG_SIZE > 32
     if is_train:
-        # this should always dispatch to transforms_imagenet_train
+
         transform = create_transform(
             input_size=config.DATA.IMG_SIZE,
             is_training=True,
@@ -103,14 +101,14 @@ def build_transform(is_train, config):
         if config.TEST.CROP:
             size = int((256 / 224) * config.DATA.IMG_SIZE)
             t.append(
-                transforms.Resize((size, size), interpolation=_str_to_pil_interpolation[config.DATA.INTERPOLATION]),
+                transforms.Resize((size, size), interpolation=transforms.InterpolationMode.BICUBIC),
                 # to maintain same ratio w.r.t. 224 images
             )
             t.append(transforms.CenterCrop(config.DATA.IMG_SIZE))
         else:
             t.append(
                 transforms.Resize((config.DATA.IMG_SIZE, config.DATA.IMG_SIZE),
-                                  interpolation=_str_to_pil_interpolation[config.DATA.INTERPOLATION])
+                                  interpolation=transforms.InterpolationMode.BICUBIC)
             )
 
     t.append(transforms.ToTensor())

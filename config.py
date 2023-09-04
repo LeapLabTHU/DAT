@@ -48,8 +48,14 @@ _C.MODEL.NAME = 'dat_tiny'
 _C.MODEL.RESUME = ''
 # Number of classes, overwritten in data preparation
 _C.MODEL.NUM_CLASSES = 1000
+# Dropout rate
+_C.MODEL.DROP_RATE = 0.0
+# Drop path rate
+_C.MODEL.DROP_PATH_RATE = 0.1
 # Label Smoothing
 _C.MODEL.LABEL_SMOOTHING = 0.1
+
+_C.MODEL.PRETRAINED = None
 
 _C.MODEL.DAT = CN(new_allowed=True)
 # -----------------------------------------------------------------------------
@@ -67,6 +73,9 @@ _C.TRAIN.MIN_LR = 5e-6
 _C.TRAIN.CLIP_GRAD = 5.0
 # Auto resume from latest checkpoint
 _C.TRAIN.AUTO_RESUME = True
+# Whether to use gradient checkpointing to save memory
+# could be overwritten by command line argument
+_C.TRAIN.USE_CHECKPOINT = False
 
 # LR scheduler
 _C.TRAIN.LR_SCHEDULER = CN()
@@ -138,6 +147,8 @@ _C.PRINT_FREQ = 100
 _C.SEED = 0
 # Perform evaluation only, overwritten by command line argument
 _C.EVAL_MODE = False
+# Test throughput only, overwritten by command line argument
+_C.THROUGHPUT_MODE = False
 # local rank for DistributedDataParallel, given by command line argument
 _C.LOCAL_RANK = 0
 
@@ -165,18 +176,24 @@ def update_config(config, args):
         config.merge_from_list(args.opts)
 
     # merge from specific arguments
+    if args.batch_size:
+        config.DATA.BATCH_SIZE = args.batch_size
     if args.data_path:
         config.DATA.DATA_PATH = args.data_path
     if args.resume:
         config.MODEL.RESUME = args.resume
     if args.amp:
         config.AMP = args.amp
+    if args.print_freq:
+        config.PRINT_FREQ = args.print_freq
     if args.output:
         config.OUTPUT = args.output
     if args.tag:
         config.TAG = args.tag
     if args.eval:
         config.EVAL_MODE = True
+    if args.throughput:
+        config.THROUGHPUT_MODE = True
 
     # output folder
     config.OUTPUT = os.path.join(config.OUTPUT, config.MODEL.NAME, config.TAG)

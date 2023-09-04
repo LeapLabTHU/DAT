@@ -1,6 +1,6 @@
 # Vision Transformer with Deformable Attention
 
-This repository contains the code for the paper Vision Transformer with Deformable Attention (CVPR2022) \[[arXiv](https://arxiv.org/abs/2201.00520)\]\[[video](https://cloud.tsinghua.edu.cn/f/17476d769ced48eaa278/)]\[[poster](https://cloud.tsinghua.edu.cn/f/9afe817efb504d32951b/)\]. 
+This repository contains the code for the paper Vision Transformer with Deformable Attention (CVPR2022, **Best Paper Finalists**) \[[arXiv](https://arxiv.org/abs/2201.00520)\]\[[video](https://cloud.tsinghua.edu.cn/f/17476d769ced48eaa278/)]\[[poster](https://cloud.tsinghua.edu.cn/f/9afe817efb504d32951b/)\]\[[CVPR page](https://openaccess.thecvf.com/content/CVPR2022/html/Xia_Vision_Transformer_With_Deformable_Attention_CVPR_2022_paper.html)\], and DAT++: Spatially Dynamic Vision Transformerwith Deformable Attention (extened version)\[[OneDrive](https://1drv.ms/b/s!ApI0vb6wPqmtgrl6Pqn0wybDrpaxvg?e=4yVs7Z)].
 
 ## Introduction
 
@@ -15,70 +15,60 @@ This repository contains the code for the paper Vision Transformer with Deformab
 
 ![Deform_Attn](figures/datt.png)
 
-By learning several groups of offsets for the grid reference points, the deformed keys and values are sampled from these shifted locations. This deformable attention can capture the most informative regions in the image. On this basis, we present **Deformable Attention Transformer (DAT)**, a general backbone model with deformable attention for both image classification and other dense prediction tasks. 
+By learning several groups of offsets for the grid reference points, the deformed keys and values are sampled from these shifted locations. This deformable attention can capture the most informative regions in the image. On this basis, we present **Deformable Attention Transformer (DAT)** and **DAT++**, a general backbone model with deformable attention for both image classification and other dense prediction tasks. 
 
 ### Visualizations
 
 ![Visualizations](figures/vis.png)
 
-Visualizations show the most important keys denotes in orange circles, where larger circles indicates higher attention scores. That the important keys cover the main parts of the objects demonstrates the effectiveness of  DAT.
+Visualizations show the most important keys denotes in orange circles, where larger circles indicates higher attention scores in the 3rd column. The 4-th and 5-th columns display the important keys (orange circles) to some  queries (red starts). The important keys cover the main parts of the objects, which demonstrates the effectiveness of DAT and DAT++.
 
 ## Dependencies
 
 - NVIDIA GPU + CUDA 11.3
-- Python 3.9 (\>=3.6, recommend to use Anaconda)
-- cudatoolkit == 11.3.1
+- Python 3.9
 - PyTorch == 1.11.0
 - torchvision == 0.12.0
-- numpy
+- numpy == 1.20.3
 - timm == 0.5.4
-- einops
+- einops == 0.6.1
+- natten == 0.14.6
 - PyYAML
 - yacs
 - termcolor
 
-## Evaluate Pretrained Models
+## Evaluate Pretrained Models on ImageNet-1K Classification
 
-We provide the pretrained models in the tiny, small, and base versions of DAT, as listed below.
+We provide the pretrained models in the tiny, small, and base versions of DAT++, as listed below.
 
 | model  | resolution | acc@1 | config | pretrained weights |
 | :---: | :---: | :---: | :---: | :---: |
-| DAT-Tiny | 224x224 | 82.0 | [config](configs/dat_tiny.yaml) | [GoogleDrive](https://drive.google.com/file/d/1I08oJlXNtDe8jJPxHkroxUi7lYX2lhVc/view?usp=sharing) / [TsinghuaCloud](https://cloud.tsinghua.edu.cn/f/1367349deefc48efa650/) |
-| DAT-Small | 224x224 | 83.7 | [config](configs/dat_small.yaml) | [GoogleDrive](https://drive.google.com/file/d/1UUmQqQYY5OInVuXvUgO41Gice93vJ0A7/view?usp=sharing) / [TsinghuaCloud](https://cloud.tsinghua.edu.cn/f/f04b18081e3e4606adb7/) |
-| DAT-Base | 224x224 | 84.0 | [config](configs/dat_base.yaml) | [GoogleDrive](https://drive.google.com/file/d/1Avu16r59koxizoSYhfaCdNdr-QxLVGjd/view?usp=sharing) / [TsinghuaCloud](https://cloud.tsinghua.edu.cn/f/a8d2a9645d454120b635/) |
-| DAT-Base | 384x384 | 84.8 | [config](configs/dat_base_384.yaml) | [GoogleDrive](https://drive.google.com/file/d/1m8E2U4iQ6EOe1e8SuAGPbPlPhISXnVWq/view?usp=sharing) / [TsinghuaCloud](https://cloud.tsinghua.edu.cn/f/cf6a6b543cd64e0d8e43/) |
+| DAT-T++ | 224x224 | 83.9 | [config](configs/dat_tiny.yaml) | [GoogleDrive](https://drive.google.com/file/d/1I08oJlXNtDe8jJPxHkroxUi7lYX2lhVc/view?usp=sharing) / [TsinghuaCloud](https://cloud.tsinghua.edu.cn/f/1367349deefc48efa650/) |
+| DAT-S++ | 224x224 | 84.6 | [config](configs/dat_small.yaml) | [GoogleDrive](https://drive.google.com/file/d/1UUmQqQYY5OInVuXvUgO41Gice93vJ0A7/view?usp=sharing) / [TsinghuaCloud](https://cloud.tsinghua.edu.cn/f/f04b18081e3e4606adb7/) |
+| DAT-B++ | 224x224 | 84.9 | [config](configs/dat_base.yaml) | [GoogleDrive](https://drive.google.com/file/d/1Avu16r59koxizoSYhfaCdNdr-QxLVGjd/view?usp=sharing) / [TsinghuaCloud](https://cloud.tsinghua.edu.cn/f/a8d2a9645d454120b635/) |
+| DAT-B++ | 384x384 | 85.9 | [config](configs/dat_base_384.yaml) | [GoogleDrive](https://drive.google.com/file/d/1m8E2U4iQ6EOe1e8SuAGPbPlPhISXnVWq/view?usp=sharing) / [TsinghuaCloud](https://cloud.tsinghua.edu.cn/f/cf6a6b543cd64e0d8e43/) |
 
-To evaluate one model, please download the pretrained weights to your local machine and run the script `evaluate.sh` as follow.
+To evaluate one model, please download the pretrained weights to your local machine and run the script `evaluate.sh` as follow. 
+
+**Please notice: Before training or evaluation, please set the `--data-path` argument in `train.sh` or `evaluate.sh` to the path where ImageNet-1K data stores.**
 
 ```
 bash evaluate.sh <gpu_nums> <path-to-config> <path-to-pretrained-weights>
 ```
 
-E.g., suppose evaluating the DAT-Tiny model (`dat_tiny_in1k_224.pth`) with 8 GPUs, the command should be:
+E.g., suppose evaluating the DAT-Tiny model (`dat_pp_tiny_in1k_224.pth`) with 8 GPUs, the command should be:
 
 ```
-bash evaluate.sh 8 configs/dat_tiny.yaml dat_tiny_in1k_224.pth
+bash evaluate.sh 8 configs/dat_tiny.yaml dat_pp_tiny_in1k_224.pth
 ```
 
 And the evaluation result should give:
 
 ```
-[2022-06-07 04:08:50 dat_tiny] (main.py 288): INFO  * Acc@1 82.034 Acc@5 95.850
-[2022-06-07 04:08:50 dat_tiny] (main.py 150): INFO Accuracy of the network on the 50000 test images: 82.0%
+[2023-09-04 17:18:15 dat_plus_plus] (main.py 301): INFO  * Acc@1 83.864 Acc@5 96.734
+[2023-09-04 17:18:15 dat_plus_plus] (main.py 179): INFO Accuracy of the network on the 50000 test images: 83.9%
 ```
 
-Outputs of the other models are:
-
-```
-[2022-06-07 04:19:42 dat_small] (main.py 288): INFO  * Acc@1 83.686 Acc@5 96.392
-[2022-06-07 04:19:42 dat_small] (main.py 150): INFO Accuracy of the network on the 50000 test images: 83.7%
-
-[2022-06-07 04:24:35 dat_base] (main.py 288): INFO  * Acc@1 84.028 Acc@5 96.686
-[2022-06-07 04:24:35 dat_base] (main.py 150): INFO Accuracy of the network on the 50000 test images: 84.0%
-
-[2022-06-07 06:43:07 dat_base_384] (main.py 288): INFO  * Acc@1 84.754 Acc@5 96.982
-[2022-06-07 06:43:07 dat_base_384] (main.py 150): INFO Accuracy of the network on the 50000 test images: 84.8%
-```
 
 ## Train Models from Scratch
 
@@ -96,12 +86,14 @@ bash train_slurm.sh 32 <path-to-config> <slurm-job-name>
 
 **Remember to change the \<path-to-imagenet\> in the script files to your own ImageNet directory.**
 
-## TODO
+## Future Updates
 
 - [x] Classification pretrained models.
-- [ ] Object Detection codebase & models.
-- [ ] Semantic Segmentation codebase & models.
-- [ ] CUDA operators to accelerate sampling operations.
+- [x] Object Detection codebase & models.
+- [x] Semantic Segmentation codebase & models.
+- [ ] ImageNet-22K pretraining for DAT-B++ and DAT-L++.
+- [ ] DINO / Mask2Former for system level DET/SEG.
+- [ ] CUDA / CUTLASS acceleration (maybe).
 
 ## Acknowledgements
 
@@ -125,4 +117,4 @@ If you find our work is useful in your research, please consider citing:
 
 ## Contact
 
-If you have any questions or concerns, please send mail to [xzf20@mails.tsinghua.edu.cn](mailto:xzf20@mails.tsinghua.edu.cn).
+If you have any questions or concerns, please send email to [xzf23@mails.tsinghua.edu.cn](mailto:xzf23@mails.tsinghua.edu.cn).

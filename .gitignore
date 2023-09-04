@@ -107,4 +107,14 @@ output/
 
 clean_ckp.py
 
-*.pth
+
+# DDETR something
+deformable_detr_ops
+d_detr.py
+ddetr_b1.yaml
+ddetr_b2.yaml
+ddetr_b3.yaml
+
+# misc
+stat_mem.py
+stat_model.py

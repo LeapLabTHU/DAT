@@ -18,7 +18,6 @@ import torch
 import torch.nn as nn
 import torch.backends.cudnn as cudnn
 import torch.distributed as dist
-
 from timm.loss import LabelSmoothingCrossEntropy, SoftTargetCrossEntropy
 from timm.utils import accuracy, AverageMeter
 
@@ -28,7 +27,8 @@ from data import build_loader
 from lr_scheduler import build_scheduler
 from optimizer import build_optimizer
 from logger import create_logger
-from utils import load_checkpoint, save_checkpoint, get_grad_norm, auto_resume_helper, reduce_tensor, load_pretrained, init_dist_slurm
+from utils import load_checkpoint, load_pretrained, save_checkpoint, \
+                   get_grad_norm, auto_resume_helper, reduce_tensor, init_dist_slurm
 
 from torch.cuda.amp import GradScaler, autocast
 
@@ -46,6 +46,7 @@ def parse_option():
         nargs='+',
     )
     # easy config modification
+    parser.add_argument('--batch-size', type=int, help="batch size for single GPU")
     parser.add_argument('--data-path', type=str, help='path to dataset')
     parser.add_argument('--resume', help='resume from checkpoint')
     parser.add_argument('--amp', action='store_true', default=False)
@@ -53,7 +54,8 @@ def parse_option():
                         help='root of output folder, the full path is <output>/<model_name>/<tag> (default: output)')
     parser.add_argument('--tag', help='tag of experiment')
     parser.add_argument('--eval', action='store_true', help='Perform evaluation only')
-    parser.add_argument('--pretrained', type=str, help='Finetune 384 initial checkpoint.', default='')
+    parser.add_argument('--throughput', action='store_true', help='Test throughput only')
+    parser.add_argument('--print-freq', type=int, help='Printing frequency.', default=100)
 
     args, unparsed = parser.parse_known_args()
 
@@ -67,7 +69,7 @@ def main():
     args, config = parse_option()
     init_dist_slurm()
     torch.cuda.set_device(config.LOCAL_RANK)
-    dist.barrier()    
+    dist.barrier()
 
     seed = config.SEED + dist.get_rank()
     torch.manual_seed(seed)
@@ -75,10 +77,17 @@ def main():
     cudnn.enabled = True
     cudnn.benchmark = True
 
-    linear_scaled_lr = config.TRAIN.BASE_LR * config.DATA.BATCH_SIZE * dist.get_world_size() / 512.0
-    linear_scaled_warmup_lr = config.TRAIN.WARMUP_LR * config.DATA.BATCH_SIZE * dist.get_world_size() / 512.0
-    linear_scaled_min_lr = config.TRAIN.MIN_LR * config.DATA.BATCH_SIZE * dist.get_world_size() / 512.0
-    
+    if config.DATA.DATASET == 'imagenet':
+        standard_bs = 512.0
+    elif config.DATA.DATASET == 'imagenet22k':
+        standard_bs = 4096.0
+    else:
+        raise RuntimeError("Wrong dataset!")
+
+    # linear scale the learning rate according to total batch size, may not be optimal
+    linear_scaled_lr = config.TRAIN.BASE_LR * config.DATA.BATCH_SIZE * dist.get_world_size() / standard_bs
+    linear_scaled_warmup_lr = config.TRAIN.WARMUP_LR * config.DATA.BATCH_SIZE * dist.get_world_size() / standard_bs
+    linear_scaled_min_lr = config.TRAIN.MIN_LR * config.DATA.BATCH_SIZE * dist.get_world_size() / standard_bs
     config.defrost()
     config.TRAIN.BASE_LR = linear_scaled_lr
     config.TRAIN.WARMUP_LR = linear_scaled_warmup_lr
@@ -90,7 +99,7 @@ def main():
     logger = create_logger(output_dir=config.OUTPUT, dist_rank=dist.get_rank(), name=f"{config.MODEL.NAME}")
 
     if dist.get_rank() == 0:
-        path = os.path.join(config.OUTPUT, "config.json")
+        path = os.path.join(config.OUTPUT, "config.yaml")
         with open(path, "w") as f:
             f.write(config.dump())
         logger.info(f"Full config saved to {path}")
@@ -103,6 +112,7 @@ def main():
     logger.info(f"Creating model:{config.MODEL.TYPE}/{config.MODEL.NAME}")
     model = build_model(config)
     model.cuda()
+    model = nn.SyncBatchNorm.convert_sync_batchnorm(model)
     logger.info(str(model))
 
     optimizer = build_optimizer(config, model)
@@ -122,10 +132,11 @@ def main():
 
     max_accuracy = 0.0
     
-    if args.pretrained != '':
-        load_pretrained(args.pretrained, model_without_ddp, logger)
+    if config.MODEL.PRETRAINED is not None:
+        pretrained_ckpt_path = config.MODEL.PRETRAINED
+        load_pretrained(pretrained_ckpt_path, model_without_ddp, logger)
 
-    if config.TRAIN.AUTO_RESUME:
+    if config.TRAIN.AUTO_RESUME and config.MODEL.RESUME == '':
         resume_file = auto_resume_helper(config.OUTPUT)
         if resume_file:
             if config.MODEL.RESUME:
@@ -144,19 +155,21 @@ def main():
         logger.info(f"Accuracy of the network on the {len(dataset_val)} test images: {acc1:.1f}%")
         if config.EVAL_MODE:
             return
-
+    if config.THROUGHPUT_MODE:
+        throughput(data_loader_val, model, logger)
+        return
     logger.info("Start training")
     start_time = time.time()
     for epoch in range(config.TRAIN.START_EPOCH, config.TRAIN.EPOCHS):
         data_loader_train.sampler.set_epoch(epoch)
 
         train_one_epoch(config, model, criterion, data_loader_train, optimizer, epoch, mixup_fn, lr_scheduler, logger)
-        torch.cuda.empty_cache()
+
         if dist.get_rank() == 0 and ((epoch + 1) % config.SAVE_FREQ == 0 or (epoch + 1) == (config.TRAIN.EPOCHS)):
             save_checkpoint(config, epoch + 1, model_without_ddp, max_accuracy, optimizer, lr_scheduler, logger)
 
         acc1, acc5, loss = validate(config, data_loader_val, model, logger)
-        torch.cuda.empty_cache()
+
         logger.info(f"Accuracy of the network on the {len(dataset_val)} test images: {acc1:.1f}%")
         max_accuracy = max(max_accuracy, acc1)
         logger.info(f'Max accuracy: {max_accuracy:.2f}%')
@@ -180,7 +193,6 @@ def train_one_epoch(config, model, criterion, data_loader, optimizer, epoch, mix
 
     scaler = GradScaler()
     
-
     for idx, (samples, targets) in enumerate(data_loader):
         
         optimizer.zero_grad()
@@ -283,5 +295,23 @@ def validate(config, data_loader, model, logger):
     logger.info(f' * Acc@1 {acc1_meter.avg:.3f} Acc@5 {acc5_meter.avg:.3f}')
     return acc1_meter.avg, acc5_meter.avg, loss_meter.avg
 
+@torch.no_grad()
+def throughput(data_loader, model, logger):
+    model.eval()
+
+    for _, (images, _) in enumerate(data_loader):
+        images = images.cuda(non_blocking=True)
+        batch_size = images.shape[0]
+        for i in range(50):
+            model(images)
+        torch.cuda.synchronize()
+        logger.info(f"throughput averaged with 30 times")
+        tic1 = time.time()
+        for i in range(30):
+            model(images)
+        torch.cuda.synchronize()
+        tic2 = time.time()
+        logger.info(f"batch_size {batch_size} throughput {30 * batch_size / (tic2 - tic1)}")
+        return
 if __name__ == '__main__':
     main()
