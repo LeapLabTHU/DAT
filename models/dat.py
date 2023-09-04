@@ -125,10 +125,6 @@ class TransformerStage(nn.Module):
                 self.attns.append(
                     SlideAttention(dim_embed, heads, 3)
                 )
-            elif self.stage_spec[i] == 'C':
-                self.attns.append(
-                    DAttentionDDETR(fmap_size, ns_per_pt, heads, hc)
-                )
             else:
                 raise NotImplementedError(f'Spec: {stage_spec[i]} is not supported.')
 
