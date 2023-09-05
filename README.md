@@ -2,7 +2,7 @@
 
 This repository contains the code for the paper Vision Transformer with Deformable Attention (CVPR2022, **Best Paper Finalists**) \[[arXiv](https://arxiv.org/abs/2201.00520)\]\[[video](https://cloud.tsinghua.edu.cn/f/17476d769ced48eaa278/)]\[[poster](https://cloud.tsinghua.edu.cn/f/9afe817efb504d32951b/)\]\[[CVPR page](https://openaccess.thecvf.com/content/CVPR2022/html/Xia_Vision_Transformer_With_Deformable_Attention_CVPR_2022_paper.html)\], and DAT++: Spatially Dynamic Vision Transformerwith Deformable Attention (extended version)\[[OneDrive](https://1drv.ms/b/s!ApI0vb6wPqmtgrl6Pqn0wybDrpaxvg?e=4yVs7Z)].
 
-This repository mainly includes the implementation for image classification experiments. For object detection and instance segmentation, please refer to [DAT-Detection](); for semantic segmentation, please see [DAT-Segmentation]() for more details.
+This repository mainly includes the implementation for image classification experiments. For object detection and instance segmentation, please refer to [DAT-Detection](https://github.com/LeapLabTHU/DAT-Detection); for semantic segmentation, please see [DAT-Segmentation](https://github.com/LeapLabTHU/DAT-Segmentation) for more details.
 
 ## Introduction
 
