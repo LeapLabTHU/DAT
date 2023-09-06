@@ -1,6 +1,6 @@
 # Vision Transformer with Deformable Attention
 
-This repository contains the code for the paper Vision Transformer with Deformable Attention (CVPR2022, **Best Paper Finalists**) \[[arXiv](https://arxiv.org/abs/2201.00520)\]\[[video](https://cloud.tsinghua.edu.cn/f/17476d769ced48eaa278/)]\[[poster](https://cloud.tsinghua.edu.cn/f/9afe817efb504d32951b/)\]\[[CVPR page](https://openaccess.thecvf.com/content/CVPR2022/html/Xia_Vision_Transformer_With_Deformable_Attention_CVPR_2022_paper.html)\], and DAT++: Spatially Dynamic Vision Transformerwith Deformable Attention (extended version)\[[OneDrive](https://1drv.ms/b/s!ApI0vb6wPqmtgrl6Pqn0wybDrpaxvg?e=4yVs7Z)].
+This repository contains the code for the paper Vision Transformer with Deformable Attention (CVPR2022, **Best Paper Finalists**) \[[arXiv](https://arxiv.org/abs/2201.00520)\]\[[video](https://cloud.tsinghua.edu.cn/f/17476d769ced48eaa278/)]\[[poster](https://cloud.tsinghua.edu.cn/f/9afe817efb504d32951b/)\]\[[CVPR page](https://openaccess.thecvf.com/content/CVPR2022/html/Xia_Vision_Transformer_With_Deformable_Attention_CVPR_2022_paper.html)\], and DAT++: Spatially Dynamic Vision Transformerwith Deformable Attention (extended version)\[[arXiv](https://arxiv.org/abs/2309.01430)].
 
 This repository mainly includes the implementation for image classification experiments. For object detection and instance segmentation, please refer to [DAT-Detection](https://github.com/LeapLabTHU/DAT-Detection); for semantic segmentation, please see [DAT-Segmentation](https://github.com/LeapLabTHU/DAT-Segmentation) for more details.
 
@@ -107,6 +107,13 @@ High-Flyer AI Fundamental Research Co.,Ltd](https://www.high-flyer.cn/).
 If you find our work is useful in your research, please consider citing:
 
 ```
+@article{xia2023dat,
+    title={DAT++: Spatially Dynamic Vision Transformer with Deformable Attention}, 
+    author={Zhuofan Xia and Xuran Pan and Shiji Song and Li Erran Li and Gao Huang},
+    year={2023},
+    journal={arXiv preprint arXiv:2309.01430},
+}
+
 @InProceedings{Xia_2022_CVPR,
     author    = {Xia, Zhuofan and Pan, Xuran and Song, Shiji and Li, Li Erran and Huang, Gao},
     title     = {Vision Transformer With Deformable Attention},
