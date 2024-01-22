@@ -125,6 +125,10 @@ class TransformerStage(nn.Module):
                 self.attns.append(
                     SlideAttention(dim_embed, heads, 3)
                 )
+            elif self.stage_spec[i] == 'F':
+                self.attns.append(
+                    FullConnectedAttention(dim_embed, heads)
+                )
             else:
                 raise NotImplementedError(f'Spec: {stage_spec[i]} is not supported.')
 

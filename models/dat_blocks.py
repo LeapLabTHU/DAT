@@ -458,3 +458,31 @@ class TransformerMLPWithConv(nn.Module):
         x = self.drop2(x)
         
         return x
+
+
+class FullConnectedAttention(nn.Module):
+
+    def __init__(self, dim, num_heads=8, qkv_bias=False, attn_drop=0.0, proj_drop=0.0):
+        super().__init__()
+        assert dim % num_heads == 0, 'dim should be divisible by num_heads'
+        self.num_heads = num_heads
+        self.head_dim = dim // num_heads
+        self.scale = self.head_dim ** -0.5
+
+        self.qkv = nn.Linear(dim, dim * 3, bias=qkv_bias)
+        self.proj = nn.Linear(dim, dim)
+        self.proj_drop = nn.Dropout(proj_drop)
+        self.attn_drop = attn_drop
+
+    def forward(self, x):
+        B, C, H, W = x.size()
+        N = H * W
+        x = einops.rearrange(x, 'b c h w -> b (h w) c', b=B, c=C, h=H, w=W)
+        qkv = self.qkv(x).reshape(B, N, 3, self.num_heads, self.head_dim).permute(2, 0, 3, 1, 4)
+        q, k, v = qkv.unbind(0)
+        x = F.scaled_dot_product_attention(q, k, v, dropout_p=self.attn_drop if self.training else 0.)
+        x = x.transpose(1, 2).reshape(B, N, C)
+        x = self.proj(x)
+        x = self.proj_drop(x)
+        x = einops.rearrange(x, 'b (h w) c -> b c h w', b=B, c=C, h=H, w=W)
+        return x, None, None

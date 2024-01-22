@@ -30,8 +30,8 @@ import torch
 from torch import nn
 from torch.nn.functional import pad
 from torch.nn.init import trunc_normal_
-from natten.functional import NATTEN2DQKRPBFunction, NATTEN2DAVFunction
-
+# from natten.functional import NATTEN2DQKRPBFunction, NATTEN2DAVFunction # v0.14.6 of natten
+from natten.functional import NeighborhoodAttention2DQKAutogradFunction as NATTEN2DQKRPBFunction, NeighborhoodAttention2DAVAutogradFunction as NATTEN2DAVFunction # v0.15.0 of natten
 
 class NeighborhoodAttention2D(nn.Module):
     """

@@ -135,6 +135,7 @@ _C.TEST.CROP = True
 
 # overwritten by command line argument
 _C.AMP = False
+_C.BF16 = False
 # Path to output folder, overwritten by command line argument
 _C.OUTPUT = ''
 # Tag of experiment, overwritten by command line argument
@@ -194,6 +195,8 @@ def update_config(config, args):
         config.EVAL_MODE = True
     if args.throughput:
         config.THROUGHPUT_MODE = True
+    if args.use_bf16:
+        config.BF16 = True
 
     # output folder
     config.OUTPUT = os.path.join(config.OUTPUT, config.MODEL.NAME, config.TAG)

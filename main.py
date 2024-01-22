@@ -56,7 +56,7 @@ def parse_option():
     parser.add_argument('--eval', action='store_true', help='Perform evaluation only')
     parser.add_argument('--throughput', action='store_true', help='Test throughput only')
     parser.add_argument('--print-freq', type=int, help='Printing frequency.', default=100)
-
+    parser.add_argument('--use-bf16', action='store_true', help='Use BF16 in amp, this may be better than FP16.')
     args, unparsed = parser.parse_known_args()
 
     config = get_config(args)
@@ -209,7 +209,8 @@ def train_one_epoch(config, model, criterion, data_loader, optimizer, epoch, mix
             samples, targets = mixup_fn(samples, targets)
         
         if config.AMP: 
-            with autocast():
+            dtype = torch.bfloat16 if config.BF16 else torch.float16
+            with autocast(dtype=dtype):
                 outputs, _, _ = model(samples)
                 loss = criterion(outputs, targets)
             scaler.scale(loss).backward()
