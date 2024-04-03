@@ -15,6 +15,14 @@ import datetime
 import numpy as np
 
 import torch
+
+# The flag below controls whether to allow TF32 on matmul. This flag defaults to False
+# in PyTorch 1.12 and later.
+torch.backends.cuda.matmul.allow_tf32 = True
+
+# The flag below controls whether to allow TF32 on cuDNN. This flag defaults to True.
+torch.backends.cudnn.allow_tf32 = True
+
 import torch.nn as nn
 import torch.backends.cudnn as cudnn
 import torch.distributed as dist
@@ -209,7 +217,7 @@ def train_one_epoch(config, model, criterion, data_loader, optimizer, epoch, mix
             samples, targets = mixup_fn(samples, targets)
         
         if config.AMP: 
-            with autocast():
+            with autocast(dtype=torch.bfloat16):
                 outputs, _, _ = model(samples)
                 loss = criterion(outputs, targets)
             scaler.scale(loss).backward()
