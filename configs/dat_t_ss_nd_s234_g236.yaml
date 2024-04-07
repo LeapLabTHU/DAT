@@ -1,0 +1,38 @@
+MODEL:
+  TYPE: dat
+  NAME: dat_swinstyle
+  DAT:
+    img_size: 224
+    patch_size: 4
+    num_classes: 1000
+    expansion: 4
+    dim_stem: 64
+    dims: [96, 192, 384, 768]
+    depths: [2, 2, 6, 2]
+    stage_spec: [[N, N], [N, D], [N, D, N, D, N, D], [D, D]]
+    heads: [3, 6, 12, 24]
+    window_sizes: [7, 7, 7, 7]
+    groups: [-1, 2, 3, 6]
+    use_pes: [True, True, True, True]
+    dwc_pes: [False, False, False, False]
+    strides: [-1, 4, 2, 1]
+    offset_range_factor: [-1, -1, -1, -1]
+    no_offs: [False, False, False, False]
+    fixed_pes: [False, False, False, False]
+    use_dwc_mlps: [False, False, False, False]
+    use_lpus: [False, False, False, False]
+    use_conv_patches: False
+    ksizes: [-1, 7, 5, 3]
+    nat_ksizes: [7, 7, 7, 7]
+    drop_rate: 0.0
+    attn_drop_rate: 0.0
+    drop_path_rate: 0.2
+    
+TRAIN:
+  EPOCHS: 300
+  WARMUP_EPOCHS: 20
+
+DATA:
+  BATCH_SIZE: 128
+
+SAVE_FREQ: 1
