@@ -9,7 +9,7 @@ MODEL:
     dim_stem: 64
     dims: [96, 192, 384, 768]
     depths: [2, 2, 6, 2]
-    stage_spec: [[L, D], [L, D], [L, D, L, D, L, D], [D, D]]
+    stage_spec: [[L, S], [L, D], [L, D, L, D, L, D], [D, D]]
     heads: [3, 6, 12, 24]
     window_sizes: [7, 7, 7, 7]
     groups: [1, 2, 4, 8]
