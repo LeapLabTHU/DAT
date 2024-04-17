@@ -15,7 +15,8 @@ import datetime
 import numpy as np
 
 import torch
-
+import torch._dynamo
+torch._dynamo.config.suppress_errors = True
 # The flag below controls whether to allow TF32 on matmul. This flag defaults to False
 # in PyTorch 1.12 and later.
 torch.backends.cuda.matmul.allow_tf32 = True
@@ -312,7 +313,7 @@ def validate(config, data_loader, model, logger):
 @torch.no_grad()
 def throughput(data_loader, model, logger):
     model.eval()
-
+    # model = torch.compile(model)
     for _, (images, _) in enumerate(data_loader):
         images = images.cuda(non_blocking=True)
         batch_size = images.shape[0]

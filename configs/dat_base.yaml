@@ -19,7 +19,7 @@ MODEL:
     offset_range_factor: [-1, -1, -1, -1]
     no_offs: [False, False, False, False]
     fixed_pes: [False, False, False, False]
-    use_dwc_mlps: [True, True, True, True]
+    use_dwc_mlps: [False, False, False, False]
     use_lpus: [True, True, True, True]
     use_conv_patches: True
     ksizes: [9, 7, 5, 3]

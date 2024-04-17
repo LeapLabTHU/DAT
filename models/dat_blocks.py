@@ -15,6 +15,9 @@ import torch.nn as nn
 import torch.nn.functional as F
 import einops
 from timm.models.layers import to_2tuple, trunc_normal_
+# from kerdat.functions import datpp_bilinear_fn
+
+USE_NEAREST = False
 
 class LocalAttention(nn.Module):
 
@@ -275,11 +278,18 @@ class DAttentionBaseline(nn.Module):
             x_sampled = F.avg_pool2d(x, kernel_size=self.stride, stride=self.stride)
             assert x_sampled.size(2) == Hk and x_sampled.size(3) == Wk, f"Size is {x_sampled.size()}"
         else:
-            x_sampled = F.grid_sample(
-                input=x.reshape(B * self.n_groups, self.n_group_channels, H, W), 
-                grid=pos[..., (1, 0)], # y, x -> x, y
-                mode='bilinear', align_corners=True) # B * g, Cg, Hg, Wg
-                
+            if (not self.training) and USE_NEAREST:
+                x_sampled = F.grid_sample(
+                    input=x.reshape(B * self.n_groups, self.n_group_channels, H, W), 
+                    grid=pos[..., (1, 0)], # y, x -> x, y
+                    mode='nearest'
+                ) # B * g, Cg, Hg, Wg
+            else:
+                x_sampled = F.grid_sample(
+                    input=x.reshape(B * self.n_groups, self.n_group_channels, H, W), 
+                    grid=pos[..., (1, 0)], # y, x -> x, y
+                    mode='bilinear', align_corners=True
+                ) # B * g, Cg, Hg, Wg
 
         x_sampled = x_sampled.reshape(B, C, 1, n_sample)
 

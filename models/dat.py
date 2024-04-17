@@ -18,6 +18,7 @@ from timm.models.layers import DropPath, to_2tuple
 from .slide import SlideAttention
 from .dat_blocks import *
 from .nat import NeighborhoodAttention2D
+# from natten import NeighborhoodAttention2D
 from .qna import FusedKQnA
 
 
@@ -200,6 +201,7 @@ class DAT(nn.Module):
             nn.Conv2d(3, dim_stem, patch_size, patch_size, 0),
             LayerNormProxy(dim_stem)
         )
+        
 
         img_size = img_size // patch_size
         dpr = [x.item() for x in torch.linspace(0, drop_path_rate, sum(depths))]
